@@ -20,10 +20,18 @@
 #
 ###############################################################################
 
-from openerp import fields, models
+from datetime import datetime
+
+from openerp import api, fields, models
 
 
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     date_sent_to_supplier = fields.Datetime('Date sent to supplier')
+
+    @api.multi
+    def action_rfq_send(self):
+        self.write({'date_sent_to_supplier': datetime.now().strftime(
+            '%Y-%m-%d %H:%M:%S')})
+        return super(PurchaseOrder, self).action_rfq_send()
